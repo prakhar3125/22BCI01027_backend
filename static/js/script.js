@@ -182,30 +182,43 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Share file
-    async function shareFile(fileId) {
-        try {
-            const token = localStorage.getItem('token');
-            if (!token) return;
+    // Share file
+async function shareFile(fileId) {
+    try {
+        const token = localStorage.getItem('token');
+        if (!token) return;
 
-            const response = await fetch(ENDPOINTS.SHARE(fileId), {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-
-            const data = await response.json();
-            
-            if (!response.ok) {
-                throw new Error(data.error || 'Share failed');
+        const response = await fetch(ENDPOINTS.SHARE(fileId), {
+            headers: {
+                'Authorization': `Bearer ${token}`
             }
+        });
 
-            const shareUrl = `${window.location.origin}${data.url}`;
-            navigator.clipboard.writeText(shareUrl);
-            showMessage('Share link copied to clipboard!');
-        } catch (error) {
-            showMessage(error.message, true);
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.error || 'Share failed');
         }
+
+        const shareUrl = `${API_URL}${data.url}`;
+        navigator.clipboard.writeText(shareUrl);
+        showMessage('Share link copied to clipboard!');
+    } catch (error) {
+        showMessage(error.message, true);
     }
+}
+
+function getFile(fileId) {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        showMessage('Please log in to download files.', true);
+        return;
+    }
+
+    window.open(`${API_URL}/files/${fileId}`, '_blank');
+}
+
+
 
     // Render files list
     function renderFiles(files) {
