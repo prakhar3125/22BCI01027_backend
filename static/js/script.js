@@ -182,7 +182,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Share file
-    // Share file
 async function shareFile(fileId) {
     try {
         const token = localStorage.getItem('token');
